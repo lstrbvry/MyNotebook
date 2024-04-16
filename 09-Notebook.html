@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>MyNotebook</title>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+			body {
+				display: flex;
+				padding: 21px;
+				justify-content: center;
+				align-items: center;
+
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			h1 {
+				color: darkblue;
+			}
+			button {
+				font-size: 16px;
+			}
+			button:hover {
+				cursor: pointer;
+			}
+			button:active {
+				opacity: 0.89;
+			}
+			.fifth-row button {
+				padding: 5px;
+			}
+			.display {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr;
+				max-width: 100%;
+				font-size: 16px;
+			}
+			.display div {
+				margin-block: 5px;
+			}
+			.close-button {
+				background-color: red;
+				border-radius: 50%;
+				border: none;
+				padding-block: 5px;
+				padding-inline: 8px;
+				color: white;
+				font-weight: bold;
+			}
+			.container {
+				width: 610px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			.main {
+				width: 100%;
+			}
+			.first-row {
+				display: flex;
+				column-gap: 13px;
+				max-width: 610px;
+				margin-block: 8px;
+			}
+			.first-row > * {
+				flex: 1;
+				min-width: 0;
+			}
+			.first-row-input {
+				font-size: 21px;
+				padding: 8px;
+			}
+			.first-row:nth-child(2) {
+				max-width: 133px;
+			}
+			.second-row {
+				display: flex;
+				max-width: 610px;
+				column-gap: 13px;
+			}
+			.second-row > * {
+				flex: 1;
+				min-width: 0;
+				/* max-width: 377px; */
+				margin-block: 8px;
+			}
+			.second-row-dropdown {
+				font-size: 21px;
+				padding: 8px;
+			}
+			/* .second-row :nth-child(1) {
+				max-width: 100%;
+			} */
+			.second-row-delete {
+				max-width: 133px;
+				min-width: 0;
+			}
+			.third-row {
+				flex: 1;
+				display: flex;
+				margin-block: 8px;
+				min-width: 0;
+			}
+			.third-row-child {
+				font-size: 16px;
+				padding: 3px;
+			}
+			.third-row > * {
+				flex: 1;
+				max-width: 233px;
+				min-width: 0;
+			}
+			.fourth-row-text {
+				min-height: 89px;
+				font-size: 16px;
+				padding: 3px;
+			}
+			.fourth-row {
+				flex: 1;
+				display: flex;
+				margin-block: 8px;
+				min-width: 0;
+			}
+			.fourth-row :first-child {
+				flex: 1;
+				max-width: 233px;
+				min-width: 0;
+			}
+			.fifth-row {
+				display: flex;
+				column-gap: 8px;
+				max-width: 144px;
+				margin-block: 8px;
+			}
+			.fifth-row > * {
+				flex: 1;
+				min-width: 0;
+			}
+			footer {
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				font-size: 13px;
+				padding: 13px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Notebook</h1>
+			<div class="main">
+				<div class="first-row">
+					<div class="first-row">
+						<input
+							type="text"
+							class="js-name-input first-row-input"
+							placeholder="e.g., Paracetamol" />
+					</div>
+					<div class="first-row">
+						<button class="js-add-button input-and-add-child first-row-add">
+							Add
+						</button>
+					</div>
+				</div>
+				<div class="second-row">
+					<!-- <div class="second-row-items">Items</div> -->
+					<select name="Medicines" id="medDropdown" class="second-row-dropdown">
+						<!-- <option value="Paracetamol 500mg">Paracetamol 500mg</option>
+			<option value="Amoxicillin 500mg">Amoxicillin 500mg</option> -->
+						<!-- This -->
+					</select>
+					<button class="js-delete-button second-row-delete">Delete</button>
+				</div>
+				<div class="third-row">
+					<input
+						type="text"
+						class="js-label-input third-row-child"
+						placeholder="e.g., Dose or whatever" />
+				</div>
+				<div class="fourth-row">
+					<textarea
+						name=""
+						id="js-text-area"
+						class="fourth-row-text"
+						placeholder="e.g.,Every 4 hours as needed for fever"></textarea>
+				</div>
+				<div class="fifth-row">
+					<button class="js-submit-button toe-child">Submit</button>
+					<button class="js-search-button toe-child">Search</button>
+				</div>
+
+				<div class="js-display-area"></div>
+			</div>
+		</div>
+		<footer>
+			<!-- <p>
+				Click Add to Add the Name, fill up the input button in the thrid row
+				with the name of a property (Price, Description, Dose, Indication,
+				Definition etc.). Write the property value inside the huge text area
+				(4PHP , Medicine, Every 4 hours and so on...). Click submit. You can
+				search the item using the dropdown list and clicking 'Search' button
+			</p> -->
+		</footer>
+		<script>
+			// Decclaring all elements as variables
+			const displayArea = document.querySelector(".js-display-area");
+			const additionalInfo = document.querySelector("#js-text-area");
+			const dropdown = document.querySelector("#medDropdown");
+			const submitButton = document.querySelector(".js-submit-button");
+			const addInfoLable = document.querySelector(".js-label-input");
+			const addButton = document.querySelector(".js-add-button");
+			const nameInput = document.querySelector(".js-name-input");
+			const deleteButton = document.querySelector(".js-delete-button");
+			const searchButton = document.querySelector(".js-search-button");
+			// Arrays
+			let informationObject =
+				JSON.parse(localStorage.getItem("informationObject")) || [];
+			let nameArray = JSON.parse(localStorage.getItem("nameArray")) || [];
+			// Events
+			deleteButton.addEventListener("click", () => {
+				const drugName = dropdown.value;
+				nameArray.forEach((value, i) => {
+					if (value === drugName) {
+						nameArray.splice(i, 1);
+						informationObject.splice(i, 1);
+						console.log(nameArray);
+					}
+				});
+				if (nameArray.length === 0) {
+					document.querySelector(".optionsValue").innerHTML = "";
+				}
+				addToDropDown();
+
+				localStorage.setItem("nameArray", JSON.stringify(nameArray));
+				localStorage.setItem(
+					"informationObject",
+					JSON.stringify(informationObject)
+				);
+			});
+			submitButton.addEventListener("click", () => {
+				const drugName = dropdown.value;
+				let index = null;
+				nameArray.forEach((value, i) => {
+					if (value === drugName) {
+						index = i;
+					}
+				});
+				createObject(addInfoLable, additionalInfo, index);
+				additionalInfo.value = "";
+				addInfoLable.value = "";
+				localStorage.setItem("nameArray", JSON.stringify(nameArray));
+				localStorage.setItem(
+					"informationObject",
+					JSON.stringify(informationObject)
+				);
+			});
+			searchButton.addEventListener("click", () => {
+				// const drugName = dropdown.value;
+				// let index = null;
+				// let htmlDisplayObjects = "";
+				// nameArray.forEach((value, i) => {
+				// 	if (value === drugName) {
+				// 		index = i;
+				// 	}
+				// });
+				// const infoRetrieved = informationObject[index];
+				// for (let key in infoRetrieved) {
+				// 	htmlDisplayObjects += `<div>${key}: ${infoRetrieved[key]}<button onclick = "const Key = '${key}';
+				// 		deleteObjectProperty(Key);
+				// 		renderSearch();
+				// 		">X</button></div>`;
+				// }
+				// displayArea.innerHTML = htmlDisplayObjects;
+				renderSearch();
+			});
+			addButton.addEventListener("click", () => {
+				addDrug(nameInput);
+				addToDropDown();
+
+				informationObject.push({ NAME: nameInput.value.toUpperCase() });
+				nameArray.forEach((value, i) => {});
+				nameInput.value = "";
+				console.log(nameArray);
+				console.log(informationObject);
+				localStorage.setItem("nameArray", JSON.stringify(nameArray));
+				localStorage.setItem(
+					"informationObject",
+					JSON.stringify(informationObject)
+				);
+			});
+			//FUNCTIONS
+			function createObject(addInfoLable, additionalInfo, index) {
+				const infoLabel = addInfoLable.value;
+				const infoDescription = additionalInfo.value;
+				informationObject[index][infoLabel.toUpperCase()] =
+					infoDescription.toUpperCase();
+				console.log(informationObject);
+			}
+			function addDrug(nameInput) {
+				const drugName = nameInput.value;
+				if (!nameArray.includes(drugName.toUpperCase())) {
+					console.log("Not included");
+					nameArray.push(drugName.toUpperCase());
+				} else {
+					console.log("included");
+				}
+			}
+			function addToDropDown() {
+				let htmlOption = ``;
+				nameArray.forEach((value) => {
+					const option = `<option value = "${value.toUpperCase()}" class = 'optionsValue'>${value.toUpperCase()}</option>`;
+					htmlOption += option;
+					dropdown.innerHTML = htmlOption;
+				});
+			}
+			function deleteObjectProperty(Key) {
+				const drugName = dropdown.value;
+				let index = null;
+				nameArray.forEach((value, i) => {
+					if (value === drugName) {
+						index = i;
+					}
+				});
+				const infoRetrieved = informationObject[index];
+				if (Key !== "NAME") {
+					delete infoRetrieved[Key];
+				}
+			}
+			function renderSearch() {
+				const drugName = dropdown.value;
+				let index = null;
+				let htmlDisplayObjects = "";
+				nameArray.forEach((value, i) => {
+					if (value === drugName) {
+						index = i;
+					}
+				});
+				const infoRetrieved = informationObject[index];
+				for (let key in infoRetrieved) {
+					htmlDisplayObjects += `<div class = 'display'><div>${key}:</div><div> ${infoRetrieved[key]}</div><div><button class = "close-button" onclick = "const Key = '${key}';
+						console.log(Key);
+						deleteObjectProperty(Key);
+						renderSearch();
+						">X</button></div></div>`;
+				}
+				displayArea.innerHTML = htmlDisplayObjects;
+				localStorage.setItem("nameArray", JSON.stringify(nameArray));
+				localStorage.setItem(
+					"informationObject",
+					JSON.stringify(informationObject)
+				);
+			}
+			document.addEventListener("DOMContentLoaded", () => {
+				addToDropDown();
+			});
+		</script>
+	</body>
+</html>
